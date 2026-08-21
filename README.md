@@ -6,6 +6,10 @@
 
 A production-ready **Retrieval-Augmented Generation** chat app that turns any PDF into a conversation — powered by **Qwen3-235B-A22B**, one of the most capable open-weight models ever released, served blazing fast on **Nebius AI**.
 
+### [▶ Try the live demo](https://qwen3-pdf-rag-chat.streamlit.app)
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-qwen3--pdf--rag--chat.streamlit.app-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://qwen3-pdf-rag-chat.streamlit.app)
+
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![LlamaIndex](https://img.shields.io/badge/LlamaIndex-8A2BE2?style=for-the-badge)](https://www.llamaindex.ai/)
@@ -17,6 +21,8 @@ A production-ready **Retrieval-Augmented Generation** chat app that turns any PD
 ---
 
 ## 💡 Why this exists
+
+> **Note on the live demo:** it runs on bring-your-own-key. Paste your own [free Nebius API key](https://dub.sh/nebius) into the sidebar — it stays in your browser session and is never stored server-side.
 
 You have a 90-page research paper, a dense contract, or an annual report. You need one specific number, clause, or claim — and `Ctrl+F` isn't going to find it, because you don't know the exact wording.
 
