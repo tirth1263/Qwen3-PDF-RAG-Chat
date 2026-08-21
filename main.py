@@ -84,13 +84,22 @@ def render_pdf(file_bytes: bytes) -> None:
     )
 
 
-@st.cache_resource(show_spinner=False)
-def build_index(digest: str, file_name: str, _file_bytes: bytes, _api_key: str, _model_id: str):
-    """Index a PDF. Cached on the file digest so re-runs never re-embed."""
-    Settings.llm = NebiusLLM(model=_model_id, api_key=_api_key, temperature=0.1, max_tokens=4096)
-    Settings.embed_model = NebiusEmbedding(model_name=EMBED_MODEL, api_key=_api_key)
+def configure_settings(api_key: str, model_id: str) -> None:
+    """Apply LlamaIndex globals. Must run on every script run: build_index is
+    cached, so anything configured inside it would go stale when the user picks
+    a different model from the sidebar."""
+    Settings.llm = NebiusLLM(model=model_id, api_key=api_key, temperature=0.1, max_tokens=4096)
+    Settings.embed_model = NebiusEmbedding(model_name=EMBED_MODEL, api_key=api_key)
     Settings.node_parser = SentenceSplitter(chunk_size=1024, chunk_overlap=200)
 
+
+@st.cache_resource(show_spinner=False)
+def build_index(digest: str, file_name: str, _file_bytes: bytes):
+    """Index a PDF. Cached on the file digest so re-runs never re-embed.
+
+    Only `digest` and `file_name` form the cache key; the index depends on the
+    embedding model, which is fixed, not on the chat model.
+    """
     with tempfile.TemporaryDirectory() as tmp_dir:
         path = os.path.join(tmp_dir, file_name)
         with open(path, "wb") as fh:
@@ -172,10 +181,9 @@ if uploaded is None:
     st.stop()
 
 try:
+    configure_settings(api_key, model_id)
     with st.spinner("Indexing document -- embedding chunks with BAAI/bge-en-icl..."):
-        index = build_index(
-            st.session_state.doc_digest, uploaded.name, file_bytes, api_key, model_id
-        )
+        index = build_index(st.session_state.doc_digest, uploaded.name, file_bytes)
 except Exception as exc:  # shown to the user instead of a raw traceback
     st.error(f"Could not index this document: {exc}")
     st.stop()
